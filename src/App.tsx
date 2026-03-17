@@ -12,9 +12,6 @@ import {
 } from 'lucide-react';
 import './App.css';
 
-import heroImg from './assets/hero.png';
-
-
 
 const CurtainHero = () => {
   const { scrollYProgress } = useScroll();
@@ -36,9 +33,6 @@ const CurtainHero = () => {
           <div className="intro-line-wrap">
             <span className="intro-role">a digital marketer</span>
           </div>
-        </div>
-        <div className="hero-image-reveal">
-          <img src={heroImg} alt="Hero" />
         </div>
       </div>
 

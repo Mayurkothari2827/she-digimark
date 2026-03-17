@@ -376,6 +376,7 @@
   align-items: center;
   text-align: center;
   gap: 0.2rem;
+  margin-top: 15vh;
 }
 
 .intro-line-wrap {
