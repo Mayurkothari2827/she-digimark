@@ -1,7 +1,6 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useState, useRef } from 'react';
 import { 
-  ArrowUpRight, 
   Instagram, 
   Twitter, 
   Linkedin, 
@@ -13,9 +12,6 @@ import {
 } from 'lucide-react';
 import './App.css';
 
-import work1 from './assets/work1.png';
-import work2 from './assets/work2.png';
-import work3 from './assets/work3.png';
 import heroImg from './assets/hero.png';
 
 
@@ -119,7 +115,6 @@ const App = () => {
             transition={{ type: 'tween', duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
           >
             <nav className="nav-menu-links">
-              <a href="#work" onClick={() => setMenuOpen(false)}>Our Work</a>
               <a href="#about" onClick={() => setMenuOpen(false)}>About Us</a>
               <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
               <a href="#blog" onClick={() => setMenuOpen(false)}>Blog</a>
@@ -182,34 +177,6 @@ const App = () => {
         </div>
       </div>
 
-      {/* Work Section */}
-      <section id="work" className="work container">
-        <div className="section-header">
-          <h2 className="section-title">Selected Work</h2>
-          <button className="text-btn">All Projects <ArrowUpRight size={20} /></button>
-        </div>
-        
-        <div className="work-grid">
-          <WorkCard 
-            title="Vibe Lifestyle" 
-            category="Social Media Strategy" 
-            img={work1}
-            delay={0.1}
-          />
-          <WorkCard 
-            title="Aura Beauty" 
-            category="Content Production" 
-            img={work2}
-            delay={0.2}
-          />
-          <WorkCard 
-            title="TechFlow" 
-            category="Performance Ads" 
-            img={work3}
-            delay={0.3}
-          />
-        </div>
-      </section>
 
       {/* Services Section */}
       <section id="services" className="services">
@@ -288,7 +255,6 @@ const App = () => {
       <footer className="footer">
         {/* Nav Row */}
         <div className="footer-nav-row">
-          <a href="#work">Our Work</a>
           <a href="#about">About Us</a>
           <a href="#services">Services</a>
           <a href="#blog">Blog</a>
@@ -324,26 +290,6 @@ const App = () => {
   );
 };
 
-const WorkCard = ({ title, category, img, delay }: any) => (
-  <motion.div 
-    className="work-card"
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.6 }}
-    viewport={{ once: true }}
-  >
-    <div className="work-image-wrapper">
-      <img src={img} alt={title} className="work-img" />
-      <div className="work-overlay">
-        <span>View Project</span>
-      </div>
-    </div>
-    <div className="work-info">
-      <h3>{title}</h3>
-      <p>{category}</p>
-    </div>
-  </motion.div>
-);
 
 const ServiceItem = ({ icon, title, description }: any) => (
   <div className="service-item">
