@@ -12,7 +12,12 @@ import {
   ArrowRight 
 } from 'lucide-react';
 import './App.css';
+
 import work1 from './assets/work1.png';
+import work2 from './assets/work2.png';
+import work3 from './assets/work3.png';
+import heroImg from './assets/hero.png';
+
 
 
 const CurtainHero = () => {
@@ -35,6 +40,9 @@ const CurtainHero = () => {
           <div className="intro-line-wrap">
             <span className="intro-role">a digital marketer</span>
           </div>
+        </div>
+        <div className="hero-image-reveal">
+          <img src={heroImg} alt="Hero" />
         </div>
       </div>
 
@@ -191,13 +199,13 @@ const App = () => {
           <WorkCard 
             title="Aura Beauty" 
             category="Content Production" 
-            img={work1}
+            img={work2}
             delay={0.2}
           />
           <WorkCard 
             title="TechFlow" 
             category="Performance Ads" 
-            img={work1}
+            img={work3}
             delay={0.3}
           />
         </div>
