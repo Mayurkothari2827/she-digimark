@@ -2,13 +2,17 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import { useState, useRef } from 'react';
 import { 
   Instagram, 
-  Twitter, 
   Linkedin, 
   ChevronRight, 
   Zap, 
-  Target, 
-  BarChart3, 
-  ArrowRight 
+  ArrowRight,
+  Smartphone,
+  PenTool,
+  Layout,
+  BookOpen,
+  Compass,
+  Megaphone,
+  Search
 } from 'lucide-react';
 import './App.css';
 
@@ -62,7 +66,7 @@ const App = () => {
   const scrollRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const marqueeText = "STORYTELLING • SOCIAL-FIRST • CREATIVE STRATEGY • CONTENT PRODUCTION • PERFORMANCE ADS • EFFECTIVENESS • ";
+  const marqueeText = "Ideate. Strategize. Grow. Dominate Your Brand Presence. • ";
 
   return (
     <div className="app-container" ref={scrollRef}>
@@ -111,7 +115,6 @@ const App = () => {
             <nav className="nav-menu-links">
               <a href="#about" onClick={() => setMenuOpen(false)}>About Us</a>
               <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
-              <a href="#blog" onClick={() => setMenuOpen(false)}>Blog</a>
             </nav>
           </motion.div>
         )}
@@ -175,49 +178,52 @@ const App = () => {
       {/* Services Section */}
       <section id="services" className="services">
         <div className="container">
-          <h2 className="section-title">What We Do</h2>
+          <div className="section-header">
+            <h2 className="section-title">What We Do</h2>
+            <p className="services-intro">From building your presence to scaling your growth, we offer:</p>
+          </div>
           <div className="services-list">
             <ServiceItem 
+              icon={<Smartphone className="pink-text" />}
+              title="Social Media Management"
+              description=""
+            />
+            <ServiceItem 
+              icon={<PenTool className="pink-text" />}
+              title="Content & Creative Marketing"
+              description=""
+            />
+            <ServiceItem 
               icon={<Zap className="pink-text" />}
-              title="Creative Content"
-              description="High-energy reels, TikToks, and static content that actually stops the scroll."
+              title="Performance Marketing"
+              description=""
             />
             <ServiceItem 
-              icon={<Target className="pink-text" />}
-              title="Social Strategy"
-              description="Data-driven roadmaps to take your brand from zero to viral."
+              icon={<Layout className="pink-text" />}
+              title="Website Design & Development"
+              description=""
             />
             <ServiceItem 
-              icon={<BarChart3 className="pink-text" />}
-              title="Paid Growth"
-              description="Scaling your ROAS with laser-targeted ad campaigns."
+              icon={<BookOpen className="pink-text" />}
+              title="Digital Marketing Courses"
+              description=""
+            />
+            <ServiceItem 
+              icon={<Compass className="pink-text" />}
+              title="Media Strategy & Planning"
+              description=""
+            />
+            <ServiceItem 
+              icon={<Megaphone className="pink-text" />}
+              title="Influencer Marketing"
+              description=""
+            />
+            <ServiceItem 
+              icon={<Search className="pink-text" />}
+              title="SEO & Organic Growth"
+              description=""
             />
           </div>
-        </div>
-      </section>
-
-      {/* Blog Section */}
-      <section id="blog" className="blog container">
-        <div className="section-header">
-          <h2 className="section-title">The Journal</h2>
-          <p className="section-sub">INSIGHTS ON SOCIAL, STRATEGY, AND SLAPPING CONTENT.</p>
-        </div>
-        <div className="blog-grid">
-          <BlogCard 
-            title="How to stop the scroll in 0.5 seconds"
-            date="MAR 15, 2026"
-            category="Strategy"
-          />
-          <BlogCard 
-            title="The death of the static post (And what's next)"
-            date="MAR 10, 2026"
-            category="Creative"
-          />
-          <BlogCard 
-            title="Scaling your brand without losing your soul"
-            date="MAR 05, 2026"
-            category="Business"
-          />
         </div>
       </section>
 
@@ -227,20 +233,20 @@ const App = () => {
           <div className="about-text">
             <h2 className="section-title">About She Digimark</h2>
             <p className="large-p">
-              She Digimark is a boutique digital agency for brands who want to be more than just another post in the feed. We blend data-backed strategy with experimental creative to drive real growth.
+              She Digimark is a digital marketing agency focused on turning ideas into real growth.
             </p>
             <p>
-              Founded by marketing mavericks, we believe social media is the new storefront. If you're not making noise, you're invisible.
+              Founded by Nandika Bihani, we help brands build a strong online presence through strategy, creativity, and performance marketing — not just content, but results.
             </p>
-            <div className="social-links">
-              <a href="#"><Instagram /></a>
-              <a href="#"><Twitter /></a>
-              <a href="#"><Linkedin /></a>
-            </div>
+            <p>
+              We also train individuals to grow in the digital marketing space with practical knowledge.
+            </p>
           </div>
           <div className="about-visual">
             <div className="circle-bg"></div>
-            <div className="accent-box"></div>
+            <div className="accent-box">
+              <img src="/nandika.png" alt="Nandika Bihani" />
+            </div>
           </div>
         </div>
       </section>
@@ -251,7 +257,6 @@ const App = () => {
         <div className="footer-nav-row">
           <a href="#about">About Us</a>
           <a href="#services">Services</a>
-          <a href="#blog">Blog</a>
         </div>
 
         <div className="footer-divider" />
@@ -294,23 +299,6 @@ const ServiceItem = ({ icon, title, description }: any) => (
     </div>
     <ChevronRight className="service-arrow" />
   </div>
-);
-
-const BlogCard = ({ title, date, category }: any) => (
-  <motion.div 
-    className="blog-card"
-    whileHover={{ y: -10 }}
-    initial={{ opacity: 0, y: 30 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-  >
-    <div className="blog-meta">
-      <span className="blog-category">{category}</span>
-      <span className="blog-date">{date}</span>
-    </div>
-    <h3>{title}</h3>
-    <a href="#" className="read-more">Read Entry <ArrowRight size={16} /></a>
-  </motion.div>
 );
 
 export default App;
