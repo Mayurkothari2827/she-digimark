@@ -1,5 +1,7 @@
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 import { 
   Instagram, 
   Linkedin, 
@@ -66,12 +68,75 @@ const App = () => {
   const scrollRef = useRef(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const marqueeText = "Ideate. Strategize. Grow. Dominate Your Brand Presence. • ";
+
+  const lenisRef = useRef<Lenis | null>(null);
+
+  const scrollToSection = (id: string) => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(`#${id}`, {
+        duration: 1.5,
+        offset: -60,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      });
+    }
+  };
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const [contactData, setContactData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    message: ''
+  });
+
+  const handleContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const { name, email, company, message } = contactData;
+    const waNumber = "919587463676";
+    const text = `Hi! I'm ${name}${company ? ` from ${company}` : ''}. %0AEmail: ${email} %0A%0A${message}`;
+    window.open(`https://wa.me/${waNumber}?text=${text}`, '_blank');
+  };
+
+  useEffect(() => {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    lenisRef.current = lenis;
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    return () => {
+      lenis.destroy();
+      lenisRef.current = null;
+    };
+  }, []);
 
   return (
     <div className="app-container" ref={scrollRef}>
       {/* Navbar */}
-      <nav className="navbar">
+      <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
         <div className="nav-logo">
           <span className="logo-main">she</span>
           <span className="logo-sub">digimark</span>
@@ -113,8 +178,8 @@ const App = () => {
             transition={{ type: 'tween', duration: 0.4, ease: [0.76, 0, 0.24, 1] }}
           >
             <nav className="nav-menu-links">
-              <a href="#about" onClick={() => setMenuOpen(false)}>About Us</a>
-              <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
+              <button onClick={() => { scrollToSection('about'); setMenuOpen(false); }}>About Us</button>
+              <button onClick={() => { scrollToSection('services'); setMenuOpen(false); }}>Services</button>
             </nav>
           </motion.div>
         )}
@@ -144,14 +209,40 @@ const App = () => {
               </div>
 
               {/* Form */}
-              <form className="contact-form" onSubmit={(e) => e.preventDefault()}>
+              <form className="contact-form" onSubmit={handleContactSubmit}>
                 <div className="contact-form-left">
-                  <input className="contact-input" type="text" placeholder="Name" required />
-                  <input className="contact-input" type="email" placeholder="Email" required />
-                  <input className="contact-input" type="text" placeholder="Company" />
+                  <input 
+                    className="contact-input" 
+                    type="text" 
+                    placeholder="Name" 
+                    value={contactData.name}
+                    onChange={(e) => setContactData({...contactData, name: e.target.value})}
+                    required 
+                  />
+                  <input 
+                    className="contact-input" 
+                    type="email" 
+                    placeholder="Email" 
+                    value={contactData.email}
+                    onChange={(e) => setContactData({...contactData, email: e.target.value})}
+                    required 
+                  />
+                  <input 
+                    className="contact-input" 
+                    type="text" 
+                    placeholder="Company" 
+                    value={contactData.company}
+                    onChange={(e) => setContactData({...contactData, company: e.target.value})}
+                  />
                 </div>
                 <div className="contact-form-right">
-                  <textarea className="contact-textarea" placeholder="What would you like help with?" rows={6} />
+                  <textarea 
+                    className="contact-textarea" 
+                    placeholder="What would you like help with?" 
+                    rows={6} 
+                    value={contactData.message}
+                    onChange={(e) => setContactData({...contactData, message: e.target.value})}
+                  />
                 </div>
                 <div className="contact-form-submit">
                   <button type="submit" className="contact-submit-btn">
@@ -176,87 +267,51 @@ const App = () => {
 
 
       {/* Services Section */}
-      <section id="services" className="services">
+      <motion.section 
+        id="services" 
+        className="services"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      >
         <div className="container">
           <div className="section-header">
             <h2 className="section-title">What We Do</h2>
             <p className="services-intro">From building your presence to scaling your growth, we offer:</p>
           </div>
           <div className="services-list">
-            <ServiceItem 
-              icon={<Smartphone className="pink-text" />}
-              title="Social Media Management"
-              description=""
-            />
-            <ServiceItem 
-              icon={<PenTool className="pink-text" />}
-              title="Content & Creative Marketing"
-              description=""
-            />
-            <ServiceItem 
-              icon={<Zap className="pink-text" />}
-              title="Performance Marketing"
-              description=""
-            />
-            <ServiceItem 
-              icon={<Layout className="pink-text" />}
-              title="Website Design & Development"
-              description=""
-            />
-            <ServiceItem 
-              icon={<BookOpen className="pink-text" />}
-              title="Digital Marketing Courses"
-              description=""
-            />
-            <ServiceItem 
-              icon={<Compass className="pink-text" />}
-              title="Media Strategy & Planning"
-              description=""
-            />
-            <ServiceItem 
-              icon={<Megaphone className="pink-text" />}
-              title="Influencer Marketing"
-              description=""
-            />
-            <ServiceItem 
-              icon={<Search className="pink-text" />}
-              title="SEO & Organic Growth"
-              description=""
-            />
+            {[
+              { icon: <Smartphone className="pink-text" />, title: "Social Media Management" },
+              { icon: <PenTool className="pink-text" />, title: "Content & Creative Marketing" },
+              { icon: <Zap className="pink-text" />, title: "Performance Marketing" },
+              { icon: <Layout className="pink-text" />, title: "Website Design & Development" },
+              { icon: <BookOpen className="pink-text" />, title: "Digital Marketing Courses" },
+              { icon: <Compass className="pink-text" />, title: "Media Strategy & Planning" },
+              { icon: <Megaphone className="pink-text" />, title: "Influencer Marketing" },
+              { icon: <Search className="pink-text" />, title: "SEO & Organic Growth" }
+            ].map((service, idx) => (
+              <ServiceItem 
+                key={idx}
+                icon={service.icon}
+                title={service.title}
+                description=""
+                index={idx}
+              />
+            ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* About Section */}
-      <section id="about" className="about container">
-        <div className="about-grid">
-          <div className="about-text">
-            <h2 className="section-title">About She Digimark</h2>
-            <p className="large-p">
-              She Digimark is a digital marketing agency focused on turning ideas into real growth.
-            </p>
-            <p>
-              Founded by Nandika Bihani, we help brands build a strong online presence through strategy, creativity, and performance marketing — not just content, but results.
-            </p>
-            <p>
-              We also train individuals to grow in the digital marketing space with practical knowledge.
-            </p>
-          </div>
-          <div className="about-visual">
-            <div className="circle-bg"></div>
-            <div className="accent-box">
-              <img src="/nandika.png" alt="Nandika Bihani" />
-            </div>
-          </div>
-        </div>
-      </section>
+      <AboutSection />
 
       {/* Footer */}
       <footer className="footer">
         {/* Nav Row */}
         <div className="footer-nav-row">
-          <a href="#about">About Us</a>
-          <a href="#services">Services</a>
+          <button onClick={() => scrollToSection('about')}>About Us</button>
+          <button onClick={() => scrollToSection('services')}>Services</button>
         </div>
 
         <div className="footer-divider" />
@@ -290,15 +345,96 @@ const App = () => {
 };
 
 
-const ServiceItem = ({ icon, title, description }: any) => (
-  <div className="service-item">
+const AboutSection = () => {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [60, -60]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [-60, 60]);
+  
+  return (
+    <motion.section 
+      ref={ref}
+      id="about" 
+      className="about container"
+      initial={{ opacity: 0 }}
+      whileInView={{ opacity: 1 }}
+      viewport={{ once: true, margin: "-60px" }}
+      transition={{ duration: 1 }}
+      style={{ paddingTop: '4rem' }}
+    >
+      {/* Background large text for 'cool' feeling */}
+      <div className="section-bg-text">DIGIMARK</div>
+      
+      <div className="about-grid">
+        <motion.div 
+          className="about-text"
+          initial={{ opacity: 0, x: -50 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <h2 className="section-title">About She Digimark</h2>
+          <p className="large-p">
+            She Digimark is a digital marketing agency focused on turning ideas into real growth.
+          </p>
+          <p>
+            Founded by Nandika Bihani, we help brands build a strong online presence through strategy, creativity, and performance marketing — not just content, but results.
+          </p>
+          <p>
+            We also train individuals to grow in the digital marketing space with practical knowledge.
+          </p>
+        </motion.div>
+        <div className="about-visual" style={{ padding: '4rem 0' }}>
+          <motion.div 
+            className="circle-bg"
+            style={{ y: y1 }}
+            animate={{ 
+              scale: [1, 1.05, 1],
+              opacity: [0.3, 0.5, 0.3]
+            }}
+            transition={{ 
+              duration: 8, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }}
+          />
+          <motion.div 
+            className="accent-box"
+            style={{ y: y2 }}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 300, damping: 20 }}
+          >
+            <img src="/nandika.png" alt="Nandika Bihani" />
+          </motion.div>
+        </div>
+      </div>
+    </motion.section>
+  );
+};
+
+const ServiceItem = ({ icon, title, description, index }: any) => (
+  <motion.div 
+    className="service-item"
+    initial={{ opacity: 0, x: -30 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    viewport={{ once: true }}
+    transition={{ 
+      duration: 0.6, 
+      delay: index * 0.1,
+      ease: [0.16, 1, 0.3, 1] 
+    }}
+  >
     <div className="service-icon">{icon}</div>
     <div className="service-content">
       <h3>{title}</h3>
       <p>{description}</p>
     </div>
     <ChevronRight className="service-arrow" />
-  </div>
+  </motion.div>
 );
 
 export default App;
